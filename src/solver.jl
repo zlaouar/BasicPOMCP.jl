@@ -67,7 +67,13 @@ function simulate(p::POMCPPlanner, s, hnode::POMCPObsNode, steps::Int)
     ltn = log(t.total_n[h])
     best_nodes = empty!(p._best_node_mem)
     best_criterion_val = -Inf
+
     for node in t.children[h]
+        a = t.a_labels[node]
+        if @gen(:sp)(p.problem, s, a, p.rng) ∈ p.problem.obstacles
+            continue
+        end
+
         n = t.n[node]
         if n == 0 && ltn <= 0.0
             criterion_value = t.v[node]
@@ -84,6 +90,12 @@ function simulate(p::POMCPPlanner, s, hnode::POMCPObsNode, steps::Int)
             push!(best_nodes, node)
         end
     end
+
+    # randomly select an action if all actions lead to obstacles
+    if isempty(best_nodes)
+        best_nodes = [rand(p.rng, t.children[h])]
+    end
+
     ha = rand(p.rng, best_nodes)
     a = t.a_labels[ha]
 
