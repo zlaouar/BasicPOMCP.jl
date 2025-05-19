@@ -70,7 +70,7 @@ function simulate(p::POMCPPlanner, s, hnode::POMCPObsNode, steps::Int)
 
     for node in t.children[h]
         a = t.a_labels[node]
-        if @gen(:sp)(p.problem, s, a, p.rng) ∈ p.problem.obstacles
+        if @gen(:sp)(p.problem, s, a, p.rng).robot ∈ p.problem.obstacles
             continue
         end
 
