@@ -97,6 +97,7 @@ function simulate(p::POMCPPlanner, s, hnode::POMCPObsNode, steps::Int)
     # randomly select an action if all actions lead to obstacles
     if isempty(best_nodes)
         @info "All actions lead to obstacles. Randomly selecting an action."
+        println("State: $(s.robot), actions: $(t.a_labels[t.children[h]])")
         best_nodes = [rand(p.rng, t.children[h])]
     end
 
